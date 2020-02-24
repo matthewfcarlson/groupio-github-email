@@ -1,6 +1,6 @@
 {
   "name": "groupio-github-email",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "A probot based app that posts github activity to groups.io",
   "author": "Matthew Carlson <macarl@microsoft.com>",
@@ -23,7 +23,8 @@
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
-    "probot": "^9.5.3"
+    "probot": "^9.5.3",
+    "groups.io-api-ts": "^1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^25.1.0",
