@@ -5,10 +5,11 @@ import striptags from "striptags";
 import marked from "marked";
 import bent from "bent";
 import truncate from 'truncate';
-const groupio_email = process.env.DEFAULT_EMAIL || null;
+import randomstring from 'randomstring';
+const groupio_email = process.env.DEFAULT_EMAIL || "";
 const bent_string = bent("string", 200);
 
-if (groupio_email == null) {
+if (groupio_email == "") {
   console.log("We don't have a default email");
   process.exit(0);
 }
@@ -26,7 +27,7 @@ else {
 
 function send_message(subject: string, html: string, text?: string) {
   if (text == undefined) text = striptags(html);
-  const from = Buffer.from('' +(Math.floor(Math.random() * 200000))).toString('base64').substring(0,-1)
+  const from = randomstring.generate(7);
   const msg = {
     to: groupio_email,
     from: 'github-' + from +"@em4404.matthewc.dev",

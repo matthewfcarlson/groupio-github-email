@@ -27,10 +27,12 @@
     "@sendgrid/mail": "^6.5.3",
     "@types/bent": "^7.0.1",
     "@types/marked": "^0.7.2",
+    "@types/randomstring": "^1.1.6",
     "bent": "^7.1.0",
     "markdown": "^0.5.0",
     "marked": "^0.8.0",
     "probot": "^9.5.3",
+    "randomstring": "^1.1.5",
     "striptags": "^3.1.1",
     "truncate": "^2.1.0"
   },
