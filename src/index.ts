@@ -25,9 +25,10 @@ else {
 
 function send_message(subject: string, html: string, text?: string) {
   if (text == undefined) text = striptags(html);
+  const from = Buffer.from('' +(Math.floor(Math.random() * 200000))).toString('base64').substring(0,-1)
   const msg = {
     to: groupio_email,
-    from: 'test@em4404.matthewc.dev',
+    from: 'github-' + from +"@em4404.matthewc.dev",
     subject: subject,
     text: text,
     html: html,
@@ -53,7 +54,7 @@ async function get_patch_set(pr: any): Promise<string> {
   //https://github.com/matthewfcarlson/musupport/pull/49.patch becomes
   //https://patch-diff.githubusercontent.com/raw/matthewfcarlson/musupport/pull/49.patch
   try {
-    const patch = truncate(await bent_string(patch_url), 5000, {ellipsis:"... (truncated over 2000 characters)"});
+    const patch = truncate(await bent_string(patch_url), 5000, { ellipsis: "... (truncated over 2000 characters)" });
     return "<pre>" + patch + "</pre>"
   }
   catch {
@@ -241,6 +242,7 @@ export = (app: Application) => {
     const subject = format_pr_subject(pr);
     const sender = format_user(context.payload.sender);
     const status = review.state;
+    if (review.body == null || review.body == "") return;
     const body = "<p>" + sender + " submitted a review that " + status + ": </p>" + marked(review.body || "") + get_body_footer(review);
     send_message(subject, body)
   });
@@ -253,7 +255,7 @@ export = (app: Application) => {
     const sender = format_user(context.payload.sender);
     const subject = format_pr_subject(pr);
     const status = review.state;
-    const body = "<p>" + sender + " editted their review that " + status + ": </p>" + marked(review.body || "") + get_body_footer(review);
+    const body = "<p>" + sender + " edited their review that " + status + ": </p>" + marked(review.body || "") + get_body_footer(review);
     send_message(subject, body);
   });
 
@@ -276,7 +278,15 @@ export = (app: Application) => {
     const sender = format_user(context.payload.sender);
     const subject = format_pr_subject(pr);
     const diff = "<pre>" + comment.diff_hunk + "</pre>";
-    const body = "<p>" + sender + " added a comment on the review for " + comment.path + ": </p>" + marked(comment.body || "") + diff + get_body_footer(comment);
+    const inResponse = (<any>comment).in_reply_to_id;
+    let inResponseText = "";
+    if (inResponse != null) {
+      const data = (await context.github.pulls.getComment(context.issue({ "comment_id": inResponse }))).data;
+      console.log(data);
+      inResponseText = " in response to <a href='" + data.html_url + "'>a comment</a> by " + format_user(data.user);
+    }
+
+    const body = "<p>" + sender + " added a comment on the review for " + comment.path + " " + inResponseText + ": </p>" + marked(comment.body || "") + diff + get_body_footer(comment);
     send_message(subject, body);
   });
 
