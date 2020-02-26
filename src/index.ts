@@ -241,7 +241,7 @@ export = (app: Application) => {
     const subject = format_pr_subject(pr);
     const sender = format_user(context.payload.sender);
     const status = review.state;
-    const body = "<p>" + sender + " submitted a review that " + status + ": </p>" + marked(review.body || "REVIEW HERE") + get_body_footer(review);
+    const body = "<p>" + sender + " submitted a review that " + status + ": </p>" + marked(review.body || "") + get_body_footer(review);
     send_message(subject, body)
   });
 
@@ -253,7 +253,7 @@ export = (app: Application) => {
     const sender = format_user(context.payload.sender);
     const subject = format_pr_subject(pr);
     const status = review.state;
-    const body = "<p>" + sender + " editted their review that " + status + ": </p>" + marked(review.body || "REVIEW HERE") + get_body_footer(review);
+    const body = "<p>" + sender + " editted their review that " + status + ": </p>" + marked(review.body || "") + get_body_footer(review);
     send_message(subject, body);
   });
 
@@ -268,7 +268,7 @@ export = (app: Application) => {
     send_message(subject, body);
   });
   // PR review comments
-  app.on('pull_request_review_comment.submitted', async context => {
+  app.on('pull_request_review_comment.created', async context => {
     // A PR review comment was submitted, what should we do with it?
     console.log("A PR review comment was submitted, what should we do with it?")
     const pr = context.payload.pull_request;
@@ -276,7 +276,7 @@ export = (app: Application) => {
     const sender = format_user(context.payload.sender);
     const subject = format_pr_subject(pr);
     const diff = "<pre>" + comment.diff_hunk + "</pre>";
-    const body = "<p>" + sender + " added a comment on the review for " + comment.path + ": </p>" + marked(comment.body || "REVIEW HERE") + diff + get_body_footer(comment);
+    const body = "<p>" + sender + " added a comment on the review for " + comment.path + ": </p>" + marked(comment.body || "") + diff + get_body_footer(comment);
     send_message(subject, body);
   });
 
@@ -290,7 +290,7 @@ export = (app: Application) => {
     const subject = format_pr_subject(pr);
     const action = context.payload.action;
     const diff = "<pre>" + comment.diff_hunk + "</pre>";
-    const body = "<p>" + sender + " " + action + " their comment on their review for " + comment.path + ": </p>" + marked(comment.body || "REVIEW HERE") + diff + get_body_footer(comment);
+    const body = "<p>" + sender + " " + action + " their comment on their review for " + comment.path + ": </p>" + marked(comment.body || "") + diff + get_body_footer(comment);
     send_message(subject, body);
   });
 }
