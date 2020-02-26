@@ -5,12 +5,13 @@ import striptags from "striptags";
 import marked from "marked";
 import bent from "bent";
 import truncate from 'truncate';
-const groupio_email = "seans-test-group+int+1348+6716101840366656337@groups.io";
+const groupio_email = process.env.DEFAULT_EMAIL || null;
 const bent_string = bent("string", 200);
 
-//bent_string("https://patch-diff.githubusercontent.com/raw/matthewfcarlson/musupport/pull/47.patch").then(x => console.log(x));
-//bent_string("https://github.com/matthewfcarlson/musupport/pull/49.patch").then(x => console.log(x));
-
+if (groupio_email == null) {
+  console.log("We don't have a default email");
+  process.exit(0);
+}
 
 // using Twilio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
